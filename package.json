@@ -1,0 +1,25 @@
+{
+  "name": "ra-laravel-client",
+  "version": "1.0.0",
+  "description": "A laravel-focused JSONAPI dataprovider for react-admin",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["laravel", "react-admin"],
+  "author": "Jesus Ordosgoitty",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jodaz/ra-laravel-client.git"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "deepmerge": "^4.2.2",
+    "qs": "^6.9.4"
+  },
+  "bugs": {
+    "url": "https://github.com/jodaz/ra-laravel-client/issues"
+  },
+  "homepage": "https://github.com/jodaz/ra-laravel-client"
+}
