@@ -16,7 +16,7 @@ A laravel-focused JSONAPI dataprovider for [react-admin](https://github.com/marm
 1. Install the package `npm i -D ra-laravel-client`.
 2. Import and set the base url, and pass it as the dataprovider for react-admin.
 
-```
+``` javascript
 //in app.js
 import React from "react";
 import { Admin, Resource } from "react-admin";
