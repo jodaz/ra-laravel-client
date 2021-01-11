@@ -12,9 +12,7 @@ import {
   GET_MANY_REFERENCE
 } from './actions';
 import { stringify } from 'qs';
-import {
-  NotImplementedError
-} from './errors';
+import { NotImplementedError } from './errors';
 import defaultSettings from './defaultSettings';
 import init from './initializer';
 
@@ -28,7 +26,7 @@ export default (apiURL, customSettings = {}) => (type, resource, params) => {
   };
 
   switch(type) {
-    case GET_LIST: 
+    case GET_LIST:
       const { page, perPage } = params.pagination;
 
       // Create query with pagination params.
@@ -50,10 +48,6 @@ export default (apiURL, customSettings = {}) => (type, resource, params) => {
 
       url = `${apiURL}/${resource}?${stringify(query)}`;
       break;
-    case NEW:
-      url = `${apiURL}/${resource}/create`;
-      options.method = 'GET';
-      break;
     case CREATE:
       url = `${apiURL}/${resource}`;
       options.method = 'POST';
@@ -66,11 +60,7 @@ export default (apiURL, customSettings = {}) => (type, resource, params) => {
     case GET_ONE:
       url = `${apiURL}/${resource}/${params.id}`;
       break;
-    case EDIT:
-      url = `${apiURL}/${resource}/5/edit`;
-      options.method = 'GET';
-      break;
-    case UPDATE: 
+    case UPDATE:
       url = `${apiURL}/${resource}/${params.id}`;
       const attributes = params.data;
       delete attributes.id;
@@ -104,16 +94,16 @@ export default (apiURL, customSettings = {}) => (type, resource, params) => {
       if ([GET_LIST, GET_MANY, GET_MANY_REFERENCE].includes(type)) {
         if (res.data && settings.total) {
           total = res.data[settings.total];
-        }  
+        }
         total = total || res.data.data.length;
       }
 
       switch(type) {
-        case GET_LIST: 
+        case GET_LIST:
         case GET_MANY:
           return { data: res.data.data.map(item => item), total };
           break;
-        case CREATE: 
+        case CREATE:
           const { id, attributes  } = res.data;
           return {
             data: {
@@ -124,14 +114,8 @@ export default (apiURL, customSettings = {}) => (type, resource, params) => {
         case GET_ONE:
           return { data: { ...res.data  } }
           break;
-        case NEW:
-          return { data: res.data  } 
-          break;
-        case EDIT:
-          return { data: res.data  } 
-          break;
-        case DELETE: 
-          return { 
+        case DELETE:
+          return {
             data: { ...res.data },
           }
           break;
