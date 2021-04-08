@@ -1,5 +1,4 @@
 export default {
-  total: 'total',
   headers: {
     'Content-Type': 'application/json'
   },

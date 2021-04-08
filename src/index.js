@@ -1,32 +1,24 @@
 import axios from 'axios';
-import {
-  GET_LIST,
-  CREATE,
-  NEW,
-  EDIT,
-  DELETE,
-  GET_MANY,
-  DELETE_MANY,
-  GET_ONE,
-  UPDATE,
-  GET_MANY_REFERENCE
-} from './actions';
 import { stringify } from 'qs';
-import { NotImplementedError } from './errors';
 import defaultSettings from './defaultSettings';
 import init from './initializer';
 
 init('token');
 
-export default (apiURL, customSettings = {}) => (type, resource, params) => {
+const dataProvider = (apiURL, customSettings = {}) => {
   let url = '';
   const settings = {...customSettings, ...defaultSettings};
   const options = {
     headers: settings.headers,
   };
 
-  switch(type) {
-    case GET_LIST:
+  const client = axios.create({
+    baseURL: apiURL,
+    ...settings
+  });
+
+  return ({
+    getList: async (resource, params) => {
       const { page, perPage } = params.pagination;
 
       // Create query with pagination params.
@@ -47,89 +39,74 @@ export default (apiURL, customSettings = {}) => (type, resource, params) => {
       }
 
       url = `${apiURL}/${resource}?${stringify(query)}`;
-      break;
-    case CREATE:
+
+      const res = await client({ url, ...options });
+
+      return {
+        data: res.data.data.map(item => item),
+        total: res.data.total
+      }
+    },
+    getOne: async (resource, params) => {
+      url = `${apiURL}/${resource}/${params.id}`;
+
+      const res = await client.get(url);
+
+      return { data: { ...res.data  } }
+    },
+    getMany: async (resource, params) => Promise,
+    getManyReference: (resource, params) => Promise,
+    create: async (resource, params) => {
       url = `${apiURL}/${resource}`;
-      options.method = 'POST';
-      options.data = { ...params.data };
-      break;
-    case DELETE:
-      url = `${apiURL}/${resource}/${params.id}`;
-      options.method = 'DELETE';
-      break;
-    case GET_ONE:
-      url = `${apiURL}/${resource}/${params.id}`;
-      break;
-    case UPDATE:
+
+      const res = await client.post(url, params.data);
+      const { id, attributes  } = res.data;
+
+      return {
+        data: {
+          id, ...attributes,
+        },
+      };
+    },
+    update: async (resource, params) => {
       url = `${apiURL}/${resource}/${params.id}`;
       const attributes = params.data;
       delete attributes.id;
       const data = {
         ...attributes
       };
-      options.method = settings.updateMethod;
-      options.data = JSON.stringify(data);
-      break;
-    case DELETE_MANY:
-      url = `${apiURL}/${resource}/delete`;
-      options.method = 'POST';
-      options.data = params;
-      break;
-    case GET_MANY: {
-      const query = stringify({
-        'filter[id]': params.ids,
-      }, { arrayFormat: settings.arrayFormat });
 
-      url = `${apiURL}/${resource}?${query}`;
-      break;
+      const res = await axios.put(url, data);
+
+      return {
+        data: { ...res.data }
+      }
+    },
+    updateMany: (resource, params) => Promise,
+    delete: async (resource, params) => {
+      url = `${apiURL}/${resource}/${params.id}`;
+
+      const res = await client.delete(url);
+
+      return { data: { ...res.data } }
+    },
+    deleteMany: (resource, params) => Promise,
+    get: async (endpoint) => {
+      url = `${apiURL}/${endpoint}`;
+
+      const res = await client.get(url);
+
+      return res.data;
+    },
+    post: async (endpoint, data) => {
+
+      url = `${apiURL}/${endpoint}`;
+
+      const res = await client.post(url, data);
+
+      return res.data;
     }
-    default:
-      throw new NotImplementedError(`Unsupported Data Provider request type ${type}`);
-  }
+  });
+}
 
-  return axios({ url, ...options })
-    .then((res) => {
-      let total;
-
-      if ([GET_LIST, GET_MANY, GET_MANY_REFERENCE].includes(type)) {
-        if (res.data && settings.total) {
-          total = res.data[settings.total];
-        }
-        total = total || res.data.data.length;
-      }
-
-      switch(type) {
-        case GET_LIST:
-        case GET_MANY:
-          return { data: res.data.data.map(item => item), total };
-          break;
-        case CREATE:
-          const { id, attributes  } = res.data;
-          return {
-            data: {
-              id, ...attributes,
-            },
-          };
-          break;
-        case GET_ONE:
-          return { data: { ...res.data  } }
-          break;
-        case DELETE:
-          return {
-            data: { ...res.data },
-          }
-          break;
-        case DELETE_MANY:
-          return {
-            data: {...res.data}
-          }
-        case UPDATE:
-          return {
-            data: { ...res.data }
-          }
-          break;
-        default:
-          throw new NotImplementedError(`Unsupported Data Provider request type ${type}`);
-      }
-    });
-};
+export default dataProvider;

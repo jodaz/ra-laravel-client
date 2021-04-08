@@ -1,15 +1,14 @@
 # ra-laravel-client
 
-A laravel-focused JSONAPI dataprovider for [react-admin](https://github.com/marmelab/react-admin).
+A laravel-focused JSONAPI dataprovider for [react-admin](https://github.com/marmelab/react-admin). This package is still in development. Currently only supports:
 
-## Features
-
-- GET_LIST
-- GET_ONE
-- CREATE
-- UPDATE
-- DELETE
-- GET_MANY
+- `getList`
+- `getOne`
+- `create`
+- `update`
+- `delete`
+- `get`: Custom wrapper for axios.get() method
+- `post`: Custom wrapper for axios.post() method
 
 ## Usage
 
