@@ -3,6 +3,7 @@
 A laravel-focused JSONAPI dataprovider for [react-admin](https://github.com/marmelab/react-admin). This package is still in development. Currently only supports:
 
 - `getList`
+- `getMany`
 - `getManyReference`
 - `getOne`
 - `create`

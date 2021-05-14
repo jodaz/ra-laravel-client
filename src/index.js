@@ -28,6 +28,14 @@ const getQueryFromParams = params => {
   return query;
 }
 
+const getIds = (params, arrayFormat) => {
+  const query = stringify({
+    'filter[id]': params.ids,
+  }, { arrayFormat: arrayFormat });
+
+  return query;
+}
+
 const dataProvider = (apiURL, customSettings = {}) => {
   let url = '';
   const settings = {...customSettings, ...defaultSettings};
@@ -60,7 +68,18 @@ const dataProvider = (apiURL, customSettings = {}) => {
 
       return { data: { ...res.data  } }
     },
-    getMany: async (resource, params) => Promise,
+    getMany: async (resource, params) => {
+      const query = getIds(params);
+
+      url = `${apiURL}/${resource}?${query}`;
+
+      const res = await client({ url, ...options });
+
+      return {
+        data: res.data.data.map(item => item),
+        total: res.data.total
+      }
+    },
     getManyReference: async (resource, params) => {
       const query = getQueryFromParams(params);
 
@@ -107,7 +126,14 @@ const dataProvider = (apiURL, customSettings = {}) => {
 
       return { data: { ...res.data } }
     },
-    deleteMany: (resource, params) => Promise,
+    deleteMany: async (resource, params) => {
+      const query = getIds(params, settings.arrayFormat);
+      url = `${apiURL}/${resource}/${query}`;
+
+      const res = await client.delete(url);
+
+      return { data: { ...res.data } }
+    },
     get: async (endpoint) => {
       url = `${apiURL}/${endpoint}`;
 
