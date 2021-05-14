@@ -34,6 +34,15 @@ const App = () => (
 export default App;
 ```
 
+## API
+```
+  apiClient(api, customConfigs, tokenName);
+```
+
+- `api`: a valid API route **REQUIRED**.
+- `customConfigs`: an object of custom axios configs.
+- `tokenName`: a valid token name used when retrieving a Bearer token from localStorage.
+
 ## Credits
 
 I must give a huge thanks to [@henvo](https://github.com/henvo/ra-jsonapi-client). I literally copy-pasted his original repo and adapted to my own codebase.
