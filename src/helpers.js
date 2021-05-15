@@ -1,3 +1,5 @@
+import { stringify } from 'qs';
+
 const getQueryFromParams = params => {
   const { page, perPage } = params.pagination;
 
