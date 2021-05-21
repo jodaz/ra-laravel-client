@@ -8,6 +8,8 @@ import {
 } from './helpers';
 
 const dataProvider = (apiURL, customSettings = {}, tokenName = 'token') => {
+  init(tokenName);
+
   let url = '';
   const settings = {...customSettings, ...defaultSettings};
   const options = {
@@ -18,8 +20,6 @@ const dataProvider = (apiURL, customSettings = {}, tokenName = 'token') => {
     baseURL: apiURL,
     ...settings
   });
-
-  init(client, tokenName);
 
   return ({
     getList: async (resource, params) => {

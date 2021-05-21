@@ -1,9 +1,10 @@
+import axios from 'axios';
 import { HttpError } from './errors';
 
 // Handle HTTP errors.
-export default (client, tokenName) => {
+export default (tokenName) => {
   // Request interceptor
-  client.interceptors.request.use(
+  axios.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem(tokenName);
 
@@ -20,7 +21,7 @@ export default (client, tokenName) => {
   );
 
   // Response interceptor
-  client.interceptors.response.use(
+  axios.interceptors.response.use(
     response => response,
     (error) => {
       const { status, data } = error.response;
