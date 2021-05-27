@@ -85,7 +85,7 @@ const dataProvider = (apiURL, customSettings = {}, tokenName = 'token') => {
         ...attributes
       };
 
-      const res = await axios.put(url, data);
+      const res = await client.put(url, data);
 
       return {
         data: { ...res.data }
