@@ -1,15 +1,13 @@
 import axios from 'axios';
 import { stringify } from 'qs';
 import defaultSettings from './defaultSettings';
-import init from './initializer';
 import {
   getIds,
   getQueryFromParams,
 } from './helpers';
+import interceptors from './interceptors';
 
 const dataProvider = (apiURL, customSettings = {}, tokenName = 'token') => {
-  init(tokenName);
-
   let url = '';
   const settings = {...customSettings, ...defaultSettings};
   const options = {
@@ -20,6 +18,8 @@ const dataProvider = (apiURL, customSettings = {}, tokenName = 'token') => {
     baseURL: apiURL,
     ...settings
   });
+
+  interceptors(client, tokenName);
 
   return ({
     getList: async (resource, params) => {

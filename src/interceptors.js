@@ -1,10 +1,9 @@
-import axios from 'axios';
 import { HttpError } from './errors';
 
 // Handle HTTP errors.
-export default (tokenName) => {
+export default (instance, tokenName) => {
   // Request interceptor
-  axios.interceptors.request.use(
+  instance.interceptors.request.use(
     (config) => {
       const token = localStorage.getItem(tokenName);
 
@@ -21,18 +20,14 @@ export default (tokenName) => {
   );
 
   // Response interceptor
-  axios.interceptors.response.use(
-    response => response,
-    (error) => {
-      const { status, data } = error.response;
+  instance.interceptors.response.use(
+    response => {
+      const { status, data } = response;
 
       if (status < 200 || status >= 300) {
-        return Promise.reject(
-          new HttpError(data, status),
-        );
+        return Promise.reject(HttpError(data, status));
       }
-
-      return Promise.reject(error);
     },
+    (error) => Promise.reject(error),
   );
 };
