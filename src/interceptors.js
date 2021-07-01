@@ -1,6 +1,3 @@
-import { HttpError } from './errors';
-
-// Handle HTTP errors.
 export default (instance, tokenName) => {
   // Request interceptor
   instance.interceptors.request.use(
@@ -17,17 +14,5 @@ export default (instance, tokenName) => {
       return newConfig;
     },
     err => Promise.reject(err),
-  );
-
-  // Response interceptor
-  instance.interceptors.response.use(
-    response => {
-      const { status, data } = response;
-
-      if (status < 200 || status >= 300) {
-        return Promise.reject(HttpError(data, status));
-      }
-    },
-    (error) => Promise.reject(error),
   );
 };
