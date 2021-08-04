@@ -85,7 +85,7 @@ const dataProvider = (apiURL, customSettings = {}, tokenName = 'token') => {
         ...attributes
       };
 
-      const res = await client.post(url, data, { method: 'PUT' });
+      const res = await client.put(url, data);
 
       return {
         data: { ...res.data }
