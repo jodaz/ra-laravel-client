@@ -1,11 +1,17 @@
 import { stringify } from 'qs';
 
 const getQueryFromParams = params => {
+  const { offsetPageNum } = params
   const { page, perPage } = params.pagination;
+
+  let currPage = page;
+  if (offsetPageNum !== null || offsetPageNum !== undefined) {
+    initPage += offsetPageNum
+  }
 
   // Create query with pagination params.
   const query = {
-    'page': page,
+    'page': currPage,
     'perPage': perPage,
   };
 

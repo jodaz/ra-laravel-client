@@ -43,6 +43,10 @@ export default App;
 - `customConfigs`: an object of custom axios configs.
 - `tokenName`: a valid token name used when retrieving a Bearer token from localStorage.
 
+## Other custom configs
+
+- `"offsetPageNum": number` an offset for page counter
+
 ## Credits
 
 I must give a huge thanks to [@henvo](https://github.com/henvo/ra-jsonapi-client). I literally copy-pasted his original repo and adapted to my own codebase.

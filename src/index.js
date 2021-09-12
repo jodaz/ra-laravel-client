@@ -23,7 +23,7 @@ const dataProvider = (apiURL, customSettings = {}, tokenName = 'token') => {
 
   return ({
     getList: async (resource, params) => {
-      const query = getQueryFromParams(params);
+      const query = getQueryFromParams({ ...params, ...customSettings });
 
       url = `${apiURL}/${resource}?${stringify(query)}`;
 
@@ -54,7 +54,7 @@ const dataProvider = (apiURL, customSettings = {}, tokenName = 'token') => {
       }
     },
     getManyReference: async (resource, params) => {
-      const query = getQueryFromParams(params);
+      const query = getQueryFromParams({ ...params, ...customSettings });
 
       url = `${apiURL}/${resource}?${stringify(query)}`;
 
