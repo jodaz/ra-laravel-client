@@ -6,7 +6,7 @@ const getQueryFromParams = params => {
 
   let currPage = page;
   if (offsetPageNum !== null || offsetPageNum !== undefined) {
-    initPage += offsetPageNum
+    currPage += offsetPageNum
   }
 
   // Create query with pagination params.
